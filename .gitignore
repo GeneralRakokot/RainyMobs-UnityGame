@@ -1,0 +1,27 @@
+# Unity generated folders
+Library/
+Temp/
+Obj/
+Build/
+Logs/
+UserSettings/
+MemoryCaptures/
+Packages/manifest.json.lock
+
+# Auto-generated files by IDE
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Build output folders (если есть)
+Build/
