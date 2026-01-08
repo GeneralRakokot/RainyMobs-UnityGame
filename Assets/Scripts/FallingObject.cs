@@ -1,13 +1,21 @@
 using UnityEngine;
 
+public enum ObjectType
+{
+    Block, Enemy, Friend,
+}
+
 public class FallingObject : MonoBehaviour
 {
-    public string type = "enemy";
+    [Header("Тип")]
+    public ObjectType type;
+
+    [Header("Основные настройки")]
     public float resetYPosition = 10f;
     public float destroyYPosition = -10f;
     public float maxTiltAngle = 10f;
 
-    private Rigidbody rb;
+    private Rigidbody2D rb;
     private float minX, maxX;
 
     // Новое значение для замедленного падения:
@@ -29,7 +37,7 @@ public class FallingObject : MonoBehaviour
         float randomTiltZ = Random.Range(-maxTiltAngle, maxTiltAngle);
         transform.rotation = Quaternion.Euler(0, 0, randomTiltZ);
 
-        rb = GetComponent<Rigidbody>();
+        rb = GetComponent<Rigidbody2D>();
 
         // Устанавливаем замедленную вертикальную скорость при телепортации
         rb.linearVelocity = new Vector3(0, fallSpeed, 0);
@@ -54,5 +62,11 @@ public class FallingObject : MonoBehaviour
         {
             // Можно оставить без изменений - гравитация будет действовать как обычно
         }
+    }
+
+    public void OnClick()
+    {
+        string[] clicks = { "click0", "click1", "click2", "click3", "click4", "click5", "click6", "click7"};
+        SFXCore.Play(clicks, 0.25f);
     }
 }

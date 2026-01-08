@@ -42,13 +42,13 @@ public class SpawnController : MonoBehaviour
             Transform child = transform.GetChild(i);
             switch (child.GetComponent<FallingObject>().type)
             {
-                case "block":
+                case ObjectType.Block:
                     blocksCount++;
                     break;
-                case "enemy":
+                case ObjectType.Enemy:
                     enemiesCount++;
                     break;
-                case "friend":
+                case ObjectType.Friend:
                     friendsCount++;
                     break;
             }
