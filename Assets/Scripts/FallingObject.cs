@@ -13,6 +13,9 @@ public class FallingObject : MonoBehaviour
     public float maxTiltAngle = 10f;
 
     private Rigidbody2D rb;
+    private Entity entity;
+    private Drops drops;
+
     private float minX, maxX;
 
     // Новое значение для замедленного падения:
@@ -20,6 +23,10 @@ public class FallingObject : MonoBehaviour
 
     void Start()
     {
+        rb = GetComponent<Rigidbody2D>();
+        entity = GetComponent<Entity>();
+        drops = GetComponent<Drops>();
+
         // Настройка границ камеры
         Camera mainCamera = Camera.main;
         if (mainCamera != null)
@@ -33,8 +40,6 @@ public class FallingObject : MonoBehaviour
         // Установка случайного наклона
         float randomTiltZ = Random.Range(-maxTiltAngle, maxTiltAngle);
         transform.rotation = Quaternion.Euler(0, 0, randomTiltZ);
-
-        rb = GetComponent<Rigidbody2D>();
 
         // Устанавливаем замедленную вертикальную скорость при телепортации
         rb.linearVelocity = new Vector3(0, fallSpeed, 0);
@@ -61,10 +66,9 @@ public class FallingObject : MonoBehaviour
         }
     }
 
-    public float forceMagnitude = 4f; // сила, которую применяем
-
-    private float maxForce = 6f; // максимальная сила
+    private float maxForce = 15f; // максимальная сила
     private float maxDistance = 2f; // максимальное расстояние
+
     public void ThrowFromTouch(Vector2 touchPoint)
     {
         // Текущая позиция объекта
@@ -104,5 +108,12 @@ public class FallingObject : MonoBehaviour
         string[] clicks = { "click0", "click1", "click2", "click3", "click4", "click5", "click6", "click7"};
         SFXCore.Play(clicks, 0.25f);
         ThrowFromTouch(touchPoint);
+        drops.ExtraDrop(100);
+        entity.DoDamage(1);
+        if (!entity.IsAlive())
+        {
+            drops.MainDrop(100);
+            Destroy(gameObject);
+        }
     }
 }
