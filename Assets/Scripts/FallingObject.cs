@@ -1,9 +1,6 @@
 using UnityEngine;
+using UnityEngine.InputSystem; // подключение нового Input System
 
-public enum ObjectType
-{
-    Block, Enemy, Friend,
-}
 
 public class FallingObject : MonoBehaviour
 {
@@ -64,9 +61,48 @@ public class FallingObject : MonoBehaviour
         }
     }
 
-    public void OnClick()
+    public float forceMagnitude = 4f; // сила, которую применяем
+
+    private float maxForce = 6f; // максимальная сила
+    private float maxDistance = 2f; // максимальное расстояние
+    public void ThrowFromTouch(Vector2 touchPoint)
+    {
+        // Текущая позиция объекта
+        Vector2 objectPosition = rb.position + new Vector2(0, 1);
+
+        // Расстояние между точкой касания и объектом
+        float distance = Vector2.Distance(objectPosition, touchPoint);
+        // Расчет силы с учетом расстояния
+        float forceScale = 0f;
+        if (distance < maxDistance)
+        {
+            forceScale = (1 - Mathf.Clamp01(distance / maxDistance));
+        }
+        // Если distance >= maxDistance, сила = 0
+        // Направление от точки касания к объекту
+        Vector2 direction = objectPosition - touchPoint;
+        
+        // Нормализация для получения направления без учета длины
+        direction.Normalize();
+
+        // Итоговая сила
+        float forceMagnitude = maxForce * forceScale;
+
+        // Применение импульса в противоположную сторону
+        rb.AddForce(direction * forceMagnitude, ForceMode2D.Impulse);
+        // Пример добавления небольшого крутящего момента
+        float torqueAmount = 1f; // значение силы вращения, регулируйте по необходимости
+        if (direction.x > 0)
+        {
+            torqueAmount = torqueAmount * -1;
+        }
+        rb.AddTorque(torqueAmount, ForceMode2D.Impulse);
+    }
+
+    public void OnClick(Vector2 touchPoint)
     {
         string[] clicks = { "click0", "click1", "click2", "click3", "click4", "click5", "click6", "click7"};
         SFXCore.Play(clicks, 0.25f);
+        ThrowFromTouch(touchPoint);
     }
 }

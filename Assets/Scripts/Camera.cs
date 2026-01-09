@@ -15,7 +15,8 @@ public class InputHandler2D : MonoBehaviour
                 FallingObject fObject = hit.collider.GetComponent<FallingObject>();
                 if (fObject != null)
                 {
-                    fObject.OnClick();
+                    Vector2 collisionPoint = hit.point;
+                    fObject.OnClick(collisionPoint);
                 }
             }
         }
